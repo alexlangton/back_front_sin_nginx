@@ -1,12 +1,22 @@
 version: '3.8'
 
 services:
+  nginx:
+    build: 
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - backend
+
   frontend:
     build: 
       context: ./frontend
       dockerfile: Dockerfile
-    ports:
-      - "5173:5173"
+    expose:
+      - "5173"
     volumes:
       - ./frontend:/app
       - /app/node_modules
@@ -17,8 +27,8 @@ services:
     build: 
       context: ./backend
       dockerfile: Dockerfile
-    ports:
-      - "8000:80"
+    expose:
+      - "80"
     volumes:
       - ./backend:/var/www/html
     environment:
@@ -31,8 +41,8 @@ services:
       MYSQL_DATABASE: sakai_db
       MYSQL_USER: sakai_user
       MYSQL_PASSWORD: sakai_password
-    ports:
-      - "3306:3306"
+    expose:
+      - "3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
